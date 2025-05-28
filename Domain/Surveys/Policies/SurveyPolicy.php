@@ -2,7 +2,7 @@
 
 namespace Domain\Surveys\Policies;
 
-use App\Models\User;
+use Domain\Shared\Models\User;
 use Domain\Surveys\Models\Survey;
 use Domain\Surveys\Permissions\SurveyPermission;
 

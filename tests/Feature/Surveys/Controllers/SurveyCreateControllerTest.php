@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\User;
+use Domain\Shared\Models\User;
 use Domain\Companies\Models\Company;
 use Domain\Surveys\Enums\SurveyStatus;
 use Domain\Surveys\Permissions\SurveyPermission;
@@ -20,6 +20,7 @@ beforeEach(function () {
         SurveyPermission::UPDATE->value,
         SurveyPermission::VIEW->value,
     ]);
+
     $this->user->assignRole($this->role);
 });
 

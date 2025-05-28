@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\User;
+use Domain\Shared\Models\User;
 use Domain\Companies\Models\Company;
 use Domain\Surveys\Actions\CreateSurveyAction;
 use Domain\Surveys\Enums\SurveyStatus;
