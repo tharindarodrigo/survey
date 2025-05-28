@@ -27,11 +27,12 @@ class SurveyUpdateRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
-                // Ensure the combination of company_id and title is unique in surveys table
+                // Ensure the combination of company_id and title is unique in surveys table, excluding soft-deleted records
                 Rule::unique('surveys')->where(function ($query) {
                     $companyId = $this->input('company_id', $this->route('company_id'));
                     if ($companyId) {
-                        $query->where('company_id', $companyId);
+                        $query->where('company_id', $companyId)
+                            ->whereNull('deleted_at');
                     }
                 })->ignore($this->route('survey')),
             ],

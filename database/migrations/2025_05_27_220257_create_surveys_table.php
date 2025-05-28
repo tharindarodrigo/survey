@@ -20,7 +20,7 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->unique(['title', 'company_id']);
+            $table->unique(['title', 'company_id', 'deleted_at']);
         });
     }
 

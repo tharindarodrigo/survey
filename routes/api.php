@@ -1,6 +1,8 @@
 <?php
 
 use Domain\Surveys\Controllers\SurveyCreateController;
+use Domain\Surveys\Controllers\SurveyDeleteController;
+use Domain\Surveys\Controllers\SurveyForceDeleteController;
 use Domain\Surveys\Controllers\SurveyUpdateController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -35,3 +37,7 @@ Route::post('/surveys', SurveyCreateController::class)
 Route::put('/surveys/{survey}', SurveyUpdateController::class)
     ->middleware(['auth:sanctum'])
     ->name('surveys.update');
+
+Route::delete('/surveys/{survey}', SurveyDeleteController::class)
+    ->middleware(['auth:sanctum'])
+    ->name('surveys.destroy');
