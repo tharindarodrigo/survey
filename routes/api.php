@@ -3,6 +3,7 @@
 use Domain\Surveys\Controllers\SurveyCreateController;
 use Domain\Surveys\Controllers\SurveyDeleteController;
 use Domain\Surveys\Controllers\SurveyForceDeleteController;
+use Domain\Surveys\Controllers\SurveyIndexController;
 use Domain\Surveys\Controllers\SurveyUpdateController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -29,6 +30,10 @@ Route::post('/tokens/create', function (Request $request) {
 
     return ['token' => $token->plainTextToken];
 });
+
+// Public routes (no authentication required)
+Route::get('/surveys', SurveyIndexController::class)
+    ->name('surveys.index');
 
 Route::post('/surveys', SurveyCreateController::class)
     ->middleware(['auth:sanctum'])
