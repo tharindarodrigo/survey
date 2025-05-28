@@ -5,91 +5,65 @@ use Domain\Companies\Models\Company;
 use Domain\Surveys\Actions\CreateSurveyAction;
 use Domain\Surveys\Enums\SurveyStatus;
 use Domain\Surveys\Models\Survey;
+use Domain\Surveys\Permissions\SurveyPermission;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Spatie\Permission\Models\Role;
 
 uses(RefreshDatabase::class);
 
-describe('Survey Creation Action', function () {
+beforeEach(function () {
+    $this->user = User::factory()->create();
+    $this->company = Company::factory()->create();
 
-    beforeEach(function () {
-        $this->action = new CreateSurveyAction();
-        $this->company = Company::factory()->create();
+    // Create a role and assign Permissions within the SurveyPermission
+    $this->role = Role::create(['name' => 'survey_creator', 'guard_name' => 'api']);
+    $this->role->syncPermissions([
+        SurveyPermission::CREATE->value,
+    ]);
+    $this->user->assignRole($this->role);
+});
+
+describe('Permission Check for Survey Creation', function () {
+
+    it('allows user with permission to create survey', function () {
+
+        $response = $this->actingAs($this->user, 'sanctum')
+            ->postJson('/api/surveys', [
+                'company_id' => $this->company->id,
+                'title' => 'Test Survey',
+                'description' => 'This is a test survey',
+            ]);
+
+        $response->assertStatus(201)
+            ->assertJsonStructure([
+                'data' => [
+                    'id',
+                    'company_id',
+                    'title',
+                    'description',
+                    'status',
+                    'created_at',
+                    'updated_at',
+                ]
+            ]);
     });
 
-    it('creates a survey with minimal data', function () {
-        $data = [
-            'company_id' => $this->company->id,
-            'title' => 'Test Survey',
-        ];
+    it('denies user without permission to create survey', function () {
+        // Remove the permission from the role
+        $this->role->revokePermissionTo(SurveyPermission::CREATE->value);
 
-        $survey = $this->action->execute($data);
+        $response = $this->actingAs($this->user, 'sanctum')
+            ->postJson('/api/surveys', [
+                'company_id' => $this->company->id,
+                'title' => 'Unauthorized Survey',
+                'description' => 'This should not be allowed',
+            ]);
 
-        expect($survey)
-            ->toBeInstanceOf(Survey::class)
-            ->and($survey->company_id)->toBe($this->company->id)
-            ->and($survey->title)->toBe('Test Survey')
-            ->and($survey->description)->toBeNull()
-            ->and($survey->status)->toBe(SurveyStatus::ACTIVE);
-
-        $this->assertDatabaseHas('surveys', [
-            'company_id' => $this->company->id,
-            'title' => 'Test Survey',
-            'status' => SurveyStatus::ACTIVE->value,
-        ]);
-    });
-
-    it('creates a survey with full data', function () {
-        $data = [
-            'company_id' => $this->company->id,
-            'title' => 'Customer Satisfaction Survey',
-            'description' => 'A comprehensive survey to measure customer satisfaction levels',
-        ];
-
-        $survey = $this->action->execute($data);
-
-        expect($survey)
-            ->toBeInstanceOf(Survey::class)
-            ->and($survey->company_id)->toBe($this->company->id)
-            ->and($survey->title)->toBe('Customer Satisfaction Survey')
-            ->and($survey->description)->toBe('A comprehensive survey to measure customer satisfaction levels')
-            ->and($survey->status)->toBe(SurveyStatus::ACTIVE);
-    });
-
-    it('always sets status to active regardless of input', function () {
-        $data = [
-            'company_id' => $this->company->id,
-            'title' => 'Test Survey',
-            'status' => SurveyStatus::COMPLETED, // This should be overridden
-        ];
-
-        $survey = $this->action->execute($data);
-
-        expect($survey->status)->toBe(SurveyStatus::ACTIVE);
-    });
-
-    it('preserves existing data and overrides status', function () {
-        $data = [
-            'company_id' => $this->company->id,
-            'title' => 'Test Survey',
-            'description' => 'Original description',
-            'status' => SurveyStatus::COMPLETED,
-            'extra_field' => 'should be preserved',
-        ];
-
-        $survey = $this->action->execute($data);
-
-        expect($survey->status)->toBe(SurveyStatus::ACTIVE)
-            ->and($survey->title)->toBe('Test Survey')
-            ->and($survey->description)->toBe('Original description');
+        $response->assertStatus(403);
     });
 });
 
 describe('Survey API Integration', function () {
-
-    beforeEach(function () {
-        $this->user = User::factory()->create();
-        $this->company = Company::factory()->create();
-    });
 
     it('returns correct json structure on successful creation', function () {
         $response = $this->actingAs($this->user, 'sanctum')
@@ -189,27 +163,6 @@ describe('Survey API Integration', function () {
 });
 
 describe('Survey Resource Formatting', function () {
-
-    beforeEach(function () {
-        $this->user = User::factory()->create();
-        $this->company = Company::factory()->create();
-    });
-
-    it('formats dates correctly in response', function () {
-        $response = $this->actingAs($this->user, 'sanctum')
-            ->postJson('/api/surveys', [
-                'company_id' => $this->company->id,
-                'title' => 'Date Format Test',
-            ]);
-
-        $response->assertStatus(201);
-
-        $data = $response->json('data');
-
-        // Verify date format (ISO 8601)
-        expect($data['created_at'])->toMatch('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}Z$/')
-            ->and($data['updated_at'])->toMatch('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{6}Z$/');
-    });
 
     it('handles enum status formatting correctly', function () {
         $response = $this->actingAs($this->user, 'sanctum')

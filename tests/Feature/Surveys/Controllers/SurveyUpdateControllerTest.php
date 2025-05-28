@@ -4,7 +4,9 @@ use App\Models\User;
 use Domain\Companies\Models\Company;
 use Domain\Surveys\Enums\SurveyStatus;
 use Domain\Surveys\Models\Survey;
+use Domain\Surveys\Permissions\SurveyPermission;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Spatie\Permission\Models\Role;
 
 uses(RefreshDatabase::class);
 
@@ -17,6 +19,14 @@ beforeEach(function () {
         'description' => 'Original survey description',
         'status' => SurveyStatus::ACTIVE,
     ]);
+
+    // Create role with survey update permission
+    $this->role = Role::create(['name' => 'survey_editor', 'guard_name' => 'api']);
+    $this->role->syncPermissions([
+        SurveyPermission::UPDATE->value,
+        SurveyPermission::VIEW->value,
+    ]);
+    $this->user->assignRole($this->role);
 });
 
 describe('Survey Update Validation', function () {

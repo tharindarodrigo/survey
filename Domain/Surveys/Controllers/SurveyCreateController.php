@@ -3,10 +3,12 @@
 namespace Domain\Surveys\Controllers;
 
 use Domain\Surveys\Actions\CreateSurveyAction;
-use Domain\Surveys\Dtos\SurveyData;
+use Domain\Surveys\Models\Survey;
+use Domain\Surveys\Permissions\SurveyPermission;
 use Domain\Surveys\Requests\SurveyCreateRequest;
 use Domain\Surveys\Resources\SurveyResource;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 
 class SurveyCreateController
 {
@@ -14,6 +16,10 @@ class SurveyCreateController
 
     public function __invoke(SurveyCreateRequest $request): JsonResponse
     {
+        if (Auth::user()->cannot('create', Survey::class)) {
+            return response()->json(['message' => 'Unauthorized'], JsonResponse::HTTP_FORBIDDEN);
+        }
+
         $survey = $this->createSurveyAction->execute($request->validated());
 
         return $survey->toResource(SurveyResource::class)

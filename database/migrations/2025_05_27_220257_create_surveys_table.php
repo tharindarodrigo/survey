@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('status')->default('draft'); // draft, active, closed
             $table->timestamps();
             $table->softDeletes();
+
+            $table->unique(['title', 'company_id']);
         });
     }
 

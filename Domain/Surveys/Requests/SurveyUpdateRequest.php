@@ -22,7 +22,19 @@ class SurveyUpdateRequest extends FormRequest
     {
         return [
             'company_id' => ['sometimes', 'exists:companies,id'],
-            'title' => ['sometimes', 'required', 'string', 'max:255'],
+            'title' => [
+                'sometimes',
+                'required',
+                'string',
+                'max:255',
+                // Ensure the combination of company_id and title is unique in surveys table
+                Rule::unique('surveys')->where(function ($query) {
+                    $companyId = $this->input('company_id', $this->route('company_id'));
+                    if ($companyId) {
+                        $query->where('company_id', $companyId);
+                    }
+                })->ignore($this->route('survey')),
+            ],
             'description' => ['sometimes', 'nullable', 'string', 'max:1000'],
             'status' => ['sometimes', Rule::enum(SurveyStatus::class)],
         ];

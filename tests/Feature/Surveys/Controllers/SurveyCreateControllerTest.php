@@ -3,13 +3,24 @@
 use App\Models\User;
 use Domain\Companies\Models\Company;
 use Domain\Surveys\Enums\SurveyStatus;
+use Domain\Surveys\Permissions\SurveyPermission;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Spatie\Permission\Models\Role;
 
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
     $this->user = User::factory()->create();
     $this->company = Company::factory()->create();
+
+    // Create role with survey creation permission
+    $this->role = Role::create(['name' => 'survey_manager', 'guard_name' => 'api']);
+    $this->role->syncPermissions([
+        SurveyPermission::CREATE->value,
+        SurveyPermission::UPDATE->value,
+        SurveyPermission::VIEW->value,
+    ]);
+    $this->user->assignRole($this->role);
 });
 
 describe('Survey Creation Validation', function () {
