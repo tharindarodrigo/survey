@@ -19,6 +19,6 @@ class SurveyDeleteController
 
         $this->deleteSurveyAction->execute($survey);
 
-        return response()->json(['message' => 'Survey deleted successfully'], JsonResponse::HTTP_OK);
+        return response()->json(status: JsonResponse::HTTP_NO_CONTENT);
     }
 }

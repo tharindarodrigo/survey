@@ -41,10 +41,7 @@ describe('Survey Delete Authorization', function () {
         $response = $this->actingAs($this->user, 'sanctum')
             ->deleteJson("/api/surveys/{$this->survey->id}");
 
-        $response->assertStatus(200)
-            ->assertJson([
-                'message' => 'Survey deleted successfully'
-            ]);
+        $response->assertStatus(204);
 
         // Verify survey is soft deleted
         expect(Survey::find($this->survey->id))->toBeNull()
@@ -81,7 +78,7 @@ describe('Survey Delete Functionality', function () {
         $response = $this->actingAs($this->user, 'sanctum')
             ->deleteJson("/api/surveys/{$this->survey->id}");
 
-        $response->assertStatus(200);
+        $response->assertStatus(204);
 
         // Check database state
         $this->assertSoftDeleted('surveys', [
@@ -99,7 +96,7 @@ describe('Survey Delete Functionality', function () {
         $response = $this->actingAs($this->user, 'sanctum')
             ->deleteJson("/api/surveys/{$this->survey->id}");
 
-        $response->assertStatus(200);
+        $response->assertStatus(204);
 
         $this->assertSoftDeleted('surveys', [
             'id' => $this->survey->id,
@@ -113,7 +110,7 @@ describe('Survey Delete Functionality', function () {
         $response = $this->actingAs($this->user, 'sanctum')
             ->deleteJson("/api/surveys/{$this->survey->id}");
 
-        $response->assertStatus(200);
+        $response->assertStatus(204);
 
         $deletedSurvey = Survey::withTrashed()->find($this->survey->id);
         expect($deletedSurvey->title)->toBe($originalTitle)
@@ -129,7 +126,7 @@ describe('Survey Delete Functionality', function () {
         $response = $this->actingAs($this->user, 'sanctum')
             ->deleteJson("/api/surveys/{$this->survey->id}");
 
-        $response->assertStatus(200);
+        $response->assertStatus(204);
 
         // Other survey should still exist
         expect(Survey::find($otherSurvey->id))->not->toBeNull()
@@ -140,7 +137,7 @@ describe('Survey Delete Functionality', function () {
         $response = $this->actingAs($this->user, 'sanctum')
             ->deleteJson("/api/surveys/{$this->survey->id}");
 
-        $response->assertStatus(200);
+        $response->assertStatus(204);
 
         expect(Survey::count())->toBe(0)
             ->and(Survey::withTrashed()->count())->toBe(1);
@@ -154,7 +151,7 @@ describe('Survey Delete Functionality', function () {
         $deleteResponse = $this->actingAs($this->user, 'sanctum')
             ->deleteJson("/api/surveys/{$this->survey->id}");
 
-        $deleteResponse->assertStatus(200);
+        $deleteResponse->assertStatus(204);
 
         // Create a new survey with the same title and company
         $this->role->givePermissionTo(SurveyPermission::CREATE->value);
@@ -210,7 +207,7 @@ describe('Survey Delete Edge Cases', function () {
         $response = $this->actingAs($this->user, 'sanctum')
             ->deleteJson("/api/surveys/{$this->survey->id}");
 
-        $response->assertStatus(200);
+        $response->assertStatus(204);
 
         // Survey should be soft deleted
         $this->assertSoftDeleted('surveys', [
@@ -230,7 +227,7 @@ describe('Survey Delete Edge Cases', function () {
         $response = $this->actingAs($this->user, 'sanctum')
             ->deleteJson("/api/surveys/{$this->survey->id}");
 
-        $response->assertStatus(200);
+        $response->assertStatus(204);
     });
 
     it('handles concurrent deletion attempts gracefully', function () {
@@ -238,36 +235,12 @@ describe('Survey Delete Edge Cases', function () {
         $response1 = $this->actingAs($this->user, 'sanctum')
             ->deleteJson("/api/surveys/{$this->survey->id}");
 
-        $response1->assertStatus(200);
+        $response1->assertStatus(204);
 
         // Second deletion attempt should return 404 (survey no longer found in normal queries)
         $response2 = $this->actingAs($this->user, 'sanctum')
             ->deleteJson("/api/surveys/{$this->survey->id}");
 
         $response2->assertStatus(404);
-    });
-});
-
-describe('Survey Delete Response Format', function () {
-
-    it('returns correct response format', function () {
-        $response = $this->actingAs($this->user, 'sanctum')
-            ->deleteJson("/api/surveys/{$this->survey->id}");
-
-        $response->assertStatus(200)
-            ->assertJsonStructure([
-                'message'
-            ])
-            ->assertJson([
-                'message' => 'Survey deleted successfully'
-            ]);
-    });
-
-    it('returns correct content type', function () {
-        $response = $this->actingAs($this->user, 'sanctum')
-            ->deleteJson("/api/surveys/{$this->survey->id}");
-
-        $response->assertStatus(200)
-            ->assertHeader('Content-Type', 'application/json');
     });
 });
