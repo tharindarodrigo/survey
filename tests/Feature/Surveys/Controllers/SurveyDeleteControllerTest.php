@@ -1,7 +1,7 @@
 <?php
 
-use Domain\Shared\Models\User;
 use Domain\Companies\Models\Company;
+use Domain\Shared\Models\User;
 use Domain\Surveys\Enums\SurveyStatus;
 use Domain\Surveys\Models\Survey;
 use Domain\Surveys\Permissions\SurveyPermission;
@@ -57,7 +57,7 @@ describe('Survey Delete Authorization', function () {
 
         $response->assertStatus(403)
             ->assertJson([
-                'message' => 'Unauthorized'
+                'message' => 'Unauthorized',
             ]);
 
         // Verify survey still exists
@@ -169,7 +169,7 @@ describe('Survey Delete Functionality', function () {
                     'title' => $originalTitle,
                     'company_id' => $originalCompanyId,
                     'description' => 'New survey with same title',
-                ]
+                ],
             ]);
 
         // Verify we now have one active survey and one soft-deleted survey

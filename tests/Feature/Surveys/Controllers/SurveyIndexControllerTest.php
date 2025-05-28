@@ -34,8 +34,8 @@ describe('Public Survey Index Access', function () {
                         'status',
                         'created_at',
                         'updated_at',
-                    ]
-                ]
+                    ],
+                ],
             ])
             ->assertJson([
                 'data' => [
@@ -45,8 +45,8 @@ describe('Public Survey Index Access', function () {
                         'title' => 'Public Survey',
                         'description' => 'A publicly accessible survey',
                         'status' => SurveyStatus::ACTIVE->value,
-                    ]
-                ]
+                    ],
+                ],
             ]);
     });
 
@@ -78,8 +78,8 @@ describe('Public Survey Index Access', function () {
                         'id' => $survey2->id,
                         'title' => 'Second Survey',
                         'status' => SurveyStatus::COMPLETED->value,
-                    ]
-                ]
+                    ],
+                ],
             ]);
     });
 
@@ -88,7 +88,7 @@ describe('Public Survey Index Access', function () {
 
         $response->assertStatus(200)
             ->assertJson([
-                'data' => []
+                'data' => [],
             ]);
     });
 });
@@ -120,8 +120,8 @@ describe('Survey Data Filtering', function () {
                     [
                         'id' => $activeSurvey->id,
                         'title' => 'Active Survey',
-                    ]
-                ]
+                    ],
+                ],
             ]);
 
         // Verify deleted survey is not in response
@@ -200,8 +200,8 @@ describe('Survey Response Format', function () {
                         'status',
                         'created_at',
                         'updated_at',
-                    ]
-                ]
+                    ],
+                ],
             ]);
 
         $surveyData = $response->json('data.0');
@@ -231,8 +231,8 @@ describe('Survey Response Format', function () {
                         'id' => $survey->id,
                         'title' => 'Survey without description',
                         'description' => null,
-                    ]
-                ]
+                    ],
+                ],
             ]);
     });
 
@@ -277,8 +277,8 @@ describe('Survey Index Edge Cases', function () {
                         'id' => $survey->id,
                         'title' => 'Survey with émojis 🎯 and special chars: áéíóú',
                         'description' => 'Description with special characters: <>&"\'',
-                    ]
-                ]
+                    ],
+                ],
             ]);
     });
 

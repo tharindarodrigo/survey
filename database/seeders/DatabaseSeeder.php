@@ -16,7 +16,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        //TODO: Refactor this
+        // TODO: Refactor this
 
         $admin = User::factory()->create([
             'name' => 'Test User',

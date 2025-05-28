@@ -1,7 +1,7 @@
 <?php
 
-use Domain\Shared\Models\User;
 use Domain\Companies\Models\Company;
+use Domain\Shared\Models\User;
 use Domain\Surveys\Enums\SurveyStatus;
 use Domain\Surveys\Permissions\SurveyPermission;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -44,7 +44,7 @@ describe('Survey Creation Validation', function () {
                     'status',
                     'created_at',
                     'updated_at',
-                ]
+                ],
             ])
             ->assertJson([
                 'data' => [
@@ -52,7 +52,7 @@ describe('Survey Creation Validation', function () {
                     'title' => 'Customer Satisfaction Survey',
                     'description' => 'A survey to measure customer satisfaction',
                     'status' => SurveyStatus::ACTIVE->value,
-                ]
+                ],
             ]);
 
         $this->assertDatabaseHas('surveys', [
@@ -77,7 +77,7 @@ describe('Survey Creation Validation', function () {
                     'title' => 'Simple Survey',
                     'description' => null,
                     'status' => SurveyStatus::ACTIVE->value,
-                ]
+                ],
             ]);
     });
 });
@@ -94,7 +94,7 @@ describe('Survey Creation Validation Rules', function () {
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['company_id'])
             ->assertJsonFragment([
-                'company_id' => ['The company id field is required.']
+                'company_id' => ['The company id field is required.'],
             ]);
     });
 
@@ -109,7 +109,7 @@ describe('Survey Creation Validation Rules', function () {
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['company_id'])
             ->assertJsonFragment([
-                'company_id' => ['The selected company id is invalid.']
+                'company_id' => ['The selected company id is invalid.'],
             ]);
     });
 
@@ -123,7 +123,7 @@ describe('Survey Creation Validation Rules', function () {
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['title'])
             ->assertJsonFragment([
-                'title' => ['The title field is required.']
+                'title' => ['The title field is required.'],
             ]);
     });
 
@@ -138,7 +138,7 @@ describe('Survey Creation Validation Rules', function () {
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['title'])
             ->assertJsonFragment([
-                'title' => ['The title field must be a string.']
+                'title' => ['The title field must be a string.'],
             ]);
     });
 
@@ -155,7 +155,7 @@ describe('Survey Creation Validation Rules', function () {
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['title'])
             ->assertJsonFragment([
-                'title' => ['The title field must not be greater than 255 characters.']
+                'title' => ['The title field must not be greater than 255 characters.'],
             ]);
     });
 
@@ -173,7 +173,7 @@ describe('Survey Creation Validation Rules', function () {
             ->assertJson([
                 'data' => [
                     'title' => $exactTitle,
-                ]
+                ],
             ]);
     });
 
@@ -189,7 +189,7 @@ describe('Survey Creation Validation Rules', function () {
             ->assertJson([
                 'data' => [
                     'description' => null,
-                ]
+                ],
             ]);
     });
 
@@ -204,7 +204,7 @@ describe('Survey Creation Validation Rules', function () {
             ->assertJson([
                 'data' => [
                     'description' => null,
-                ]
+                ],
             ]);
     });
 
@@ -219,7 +219,7 @@ describe('Survey Creation Validation Rules', function () {
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['description'])
             ->assertJsonFragment([
-                'description' => ['The description field must be a string.']
+                'description' => ['The description field must be a string.'],
             ]);
     });
 
@@ -236,7 +236,7 @@ describe('Survey Creation Validation Rules', function () {
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['description'])
             ->assertJsonFragment([
-                'description' => ['The description field must not be greater than 1000 characters.']
+                'description' => ['The description field must not be greater than 1000 characters.'],
             ]);
     });
 
@@ -254,7 +254,7 @@ describe('Survey Creation Validation Rules', function () {
             ->assertJson([
                 'data' => [
                     'description' => $exactDescription,
-                ]
+                ],
             ]);
     });
 
@@ -271,7 +271,7 @@ describe('Survey Creation Validation Rules', function () {
             ->assertJson([
                 'data' => [
                     'status' => SurveyStatus::ACTIVE->value,
-                ]
+                ],
             ]);
     });
 
@@ -334,7 +334,7 @@ describe('Survey Creation Edge Cases', function () {
                 'data' => [
                     'title' => 'Customer Survey 🎯 Ñoño',
                     'description' => 'Survey with émojis and special characters: áéíóú',
-                ]
+                ],
             ]);
     });
 
