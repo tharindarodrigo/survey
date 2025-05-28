@@ -1,6 +1,7 @@
 <?php
 
 use Domain\Surveys\Controllers\SurveyCreateController;
+use Domain\Surveys\Controllers\SurveyUpdateController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -30,3 +31,7 @@ Route::post('/tokens/create', function (Request $request) {
 Route::post('/surveys', SurveyCreateController::class)
     ->middleware(['auth:sanctum'])
     ->name('surveys.store');
+
+Route::put('/surveys/{survey}', SurveyUpdateController::class)
+    ->middleware(['auth:sanctum'])
+    ->name('surveys.update');
