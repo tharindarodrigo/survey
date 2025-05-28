@@ -24,6 +24,17 @@ class SurveySummary extends Model
         'sentiment' => Sentiment::class,
     ];
 
+    // Accessor methods for convenience
+    public function getSummaryAttribute(): ?string
+    {
+        return $this->summary_text;
+    }
+
+    public function getTopicsAttribute(): ?array
+    {
+        return $this->topics_json;
+    }
+
     public function survey(): BelongsTo
     {
         return $this->belongsTo(Survey::class);
