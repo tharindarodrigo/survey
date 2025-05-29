@@ -9,7 +9,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
-    $this->action = new DeleteSurveyAction();
+    $this->action = new DeleteSurveyAction;
     $this->company = Company::factory()->create();
     $this->survey = Survey::factory()->create([
         'company_id' => $this->company->id,

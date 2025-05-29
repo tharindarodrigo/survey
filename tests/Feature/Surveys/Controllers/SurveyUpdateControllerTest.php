@@ -1,7 +1,7 @@
 <?php
 
-use Domain\Shared\Models\User;
 use Domain\Companies\Models\Company;
+use Domain\Shared\Models\User;
 use Domain\Surveys\Enums\SurveyStatus;
 use Domain\Surveys\Models\Survey;
 use Domain\Surveys\Permissions\SurveyPermission;
@@ -57,7 +57,7 @@ describe('Survey Update Validation', function () {
                     'status',
                     'created_at',
                     'updated_at',
-                ]
+                ],
             ])
             ->assertJson([
                 'data' => [
@@ -66,7 +66,7 @@ describe('Survey Update Validation', function () {
                     'title' => 'Updated Customer Survey',
                     'description' => 'Updated survey description',
                     'status' => SurveyStatus::COMPLETED->value,
-                ]
+                ],
             ]);
 
         $this->assertDatabaseHas('surveys', [
@@ -90,7 +90,7 @@ describe('Survey Update Validation', function () {
                     'title' => 'Only Title Updated',
                     'description' => 'Original survey description', // Should remain unchanged
                     'status' => SurveyStatus::ACTIVE->value, // Should remain unchanged
-                ]
+                ],
             ]);
     });
 
@@ -116,7 +116,7 @@ describe('Survey Update Validation Rules', function () {
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['company_id'])
             ->assertJsonFragment([
-                'company_id' => ['The selected company id is invalid.']
+                'company_id' => ['The selected company id is invalid.'],
             ]);
     });
 
@@ -129,7 +129,7 @@ describe('Survey Update Validation Rules', function () {
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['title'])
             ->assertJsonFragment([
-                'title' => ['The title field must be a string.']
+                'title' => ['The title field must be a string.'],
             ]);
     });
 
@@ -144,7 +144,7 @@ describe('Survey Update Validation Rules', function () {
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['title'])
             ->assertJsonFragment([
-                'title' => ['The title field must not be greater than 255 characters.']
+                'title' => ['The title field must not be greater than 255 characters.'],
             ]);
     });
 
@@ -160,7 +160,7 @@ describe('Survey Update Validation Rules', function () {
             ->assertJson([
                 'data' => [
                     'title' => $exactTitle,
-                ]
+                ],
             ]);
     });
 
@@ -173,7 +173,7 @@ describe('Survey Update Validation Rules', function () {
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['description'])
             ->assertJsonFragment([
-                'description' => ['The description field must be a string.']
+                'description' => ['The description field must be a string.'],
             ]);
     });
 
@@ -188,7 +188,7 @@ describe('Survey Update Validation Rules', function () {
         $response->assertStatus(422)
             ->assertJsonValidationErrors(['description'])
             ->assertJsonFragment([
-                'description' => ['The description field must not be greater than 1000 characters.']
+                'description' => ['The description field must not be greater than 1000 characters.'],
             ]);
     });
 
@@ -204,7 +204,7 @@ describe('Survey Update Validation Rules', function () {
             ->assertJson([
                 'data' => [
                     'description' => $exactDescription,
-                ]
+                ],
             ]);
     });
 
@@ -218,7 +218,7 @@ describe('Survey Update Validation Rules', function () {
             ->assertJson([
                 'data' => [
                     'description' => null,
-                ]
+                ],
             ]);
     });
 
@@ -242,7 +242,7 @@ describe('Survey Update Validation Rules', function () {
             ->assertJson([
                 'data' => [
                     'status' => SurveyStatus::COMPLETED->value,
-                ]
+                ],
             ]);
     });
 
@@ -257,7 +257,7 @@ describe('Survey Update Validation Rules', function () {
                     'title' => 'Original Survey Title',
                     'description' => 'Original survey description',
                     'status' => SurveyStatus::ACTIVE->value,
-                ]
+                ],
             ]);
     });
 
@@ -273,7 +273,7 @@ describe('Survey Update Validation Rules', function () {
             ->assertJson([
                 'data' => [
                     'title' => 'Updated Title',
-                ]
+                ],
             ]);
 
         // Verify extra fields are not in database
@@ -308,7 +308,7 @@ describe('Survey Update Edge Cases', function () {
             ->assertJson([
                 'data' => [
                     'status' => SurveyStatus::COMPLETED->value,
-                ]
+                ],
             ]);
 
         // Test COMPLETED -> ACTIVE
@@ -321,7 +321,7 @@ describe('Survey Update Edge Cases', function () {
             ->assertJson([
                 'data' => [
                     'status' => SurveyStatus::ACTIVE->value,
-                ]
+                ],
             ]);
     });
 
@@ -348,7 +348,7 @@ describe('Survey Update Edge Cases', function () {
 
         $response->assertStatus(200)
             ->assertJson([
-                'data' => $originalData
+                'data' => $originalData,
             ]);
     });
 });

@@ -1,8 +1,7 @@
 <?php
 
-use Domain\Shared\Models\User;
 use Domain\Companies\Models\Company;
-use Domain\Surveys\Actions\CreateSurveyAction;
+use Domain\Shared\Models\User;
 use Domain\Surveys\Enums\SurveyStatus;
 use Domain\Surveys\Models\Survey;
 use Domain\Surveys\Permissions\SurveyPermission;
@@ -44,7 +43,7 @@ describe('Permission Check for Survey Creation', function () {
                     'status',
                     'created_at',
                     'updated_at',
-                ]
+                ],
             ]);
     });
 
@@ -83,7 +82,7 @@ describe('Survey API Integration', function () {
                     'status',
                     'created_at',
                     'updated_at',
-                ]
+                ],
             ]);
 
         $responseData = $response->json('data');
@@ -127,7 +126,7 @@ describe('Survey API Integration', function () {
         for ($i = 0; $i < 3; $i++) {
             $responses[] = $this->actingAs($this->user, 'sanctum')
                 ->postJson('/api/surveys', array_merge($surveyData, [
-                    'title' => "Concurrent Survey {$i}"
+                    'title' => "Concurrent Survey {$i}",
                 ]));
         }
 
@@ -174,8 +173,8 @@ describe('Survey Resource Formatting', function () {
         $response->assertStatus(201)
             ->assertJson([
                 'data' => [
-                    'status' => 'active'
-                ]
+                    'status' => 'active',
+                ],
             ]);
 
         // Verify it's the string value, not the enum object

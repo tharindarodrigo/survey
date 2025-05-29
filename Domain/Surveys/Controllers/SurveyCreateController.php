@@ -4,7 +4,6 @@ namespace Domain\Surveys\Controllers;
 
 use Domain\Surveys\Actions\CreateSurveyAction;
 use Domain\Surveys\Models\Survey;
-use Domain\Surveys\Permissions\SurveyPermission;
 use Domain\Surveys\Requests\SurveyCreateRequest;
 use Domain\Surveys\Resources\SurveyResource;
 use Illuminate\Http\JsonResponse;

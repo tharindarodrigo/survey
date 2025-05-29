@@ -7,7 +7,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class SurveyResource extends JsonResource
 {
-
     public function toArray(Request $request)
     {
         return [

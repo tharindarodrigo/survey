@@ -2,20 +2,13 @@
 
 namespace Domain\Surveys\Requests;
 
-use Domain\Surveys\Enums\SurveyStatus;
-use Domain\Surveys\Models\Survey;
-use Domain\Surveys\Permissions\SurveyPermission;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
-use Spatie\Permission\Models\Role;
 
 class SurveyCreateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
-     *
-     * @return bool
      */
     public function authorize(): bool
     {

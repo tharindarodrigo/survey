@@ -2,7 +2,6 @@
 
 use Domain\Surveys\Controllers\SurveyCreateController;
 use Domain\Surveys\Controllers\SurveyDeleteController;
-use Domain\Surveys\Controllers\SurveyForceDeleteController;
 use Domain\Surveys\Controllers\SurveyIndexController;
 use Domain\Surveys\Controllers\SurveyResponseCreateController;
 use Domain\Surveys\Controllers\SurveyUpdateController;
@@ -10,15 +9,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-//TODO: refactor this to use a controller
+// TODO: refactor this to use a controller
 Route::post('/tokens/create', function (Request $request) {
     $request->validate([
         'email' => 'required|email',
         'password' => 'required|string',
-        // 'token_name' => 'required|string',   
+        // 'token_name' => 'required|string',
     ]);
 
-    if (!Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
+    if (! Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
         return response()->json([
             'message' => 'Unauthenticated',
             'errors' => [

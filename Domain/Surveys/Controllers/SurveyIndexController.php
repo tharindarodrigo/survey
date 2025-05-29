@@ -3,7 +3,6 @@
 namespace Domain\Surveys\Controllers;
 
 use Domain\Surveys\Actions\IndexSurveysAction;
-use Domain\Surveys\Models\Survey;
 use Domain\Surveys\Resources\SurveyResource;
 use Illuminate\Http\JsonResponse;
 

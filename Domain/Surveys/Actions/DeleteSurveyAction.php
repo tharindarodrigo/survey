@@ -8,9 +8,6 @@ class DeleteSurveyAction
 {
     /**
      * Execute the action to soft delete a survey.
-     *
-     * @param Survey $survey
-     * @return bool
      */
     public function execute(Survey $survey): bool
     {

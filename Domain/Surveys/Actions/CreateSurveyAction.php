@@ -9,9 +9,6 @@ class CreateSurveyAction
 {
     /**
      * Execute the action to create a new survey.
-     *
-     * @param array $data
-     * @return Survey
      */
     public function execute(array $data): Survey
     {

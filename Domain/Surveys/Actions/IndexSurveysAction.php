@@ -9,8 +9,6 @@ class IndexSurveysAction
 {
     /**
      * Execute the action to retrieve all non-deleted surveys.
-     *
-     * @return Collection
      */
     public function execute(): Collection
     {
