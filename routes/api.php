@@ -1,5 +1,7 @@
 <?php
 
+use Domain\Shared\Controllers\UserController;
+use Domain\Shared\Controllers\UserTokenCreateController;
 use Domain\Surveys\Controllers\SurveyCreateController;
 use Domain\Surveys\Controllers\SurveyDeleteController;
 use Domain\Surveys\Controllers\SurveyIndexController;
@@ -9,29 +11,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-// TODO: refactor this to use a controller
-Route::post('/tokens/create', function (Request $request) {
-    $request->validate([
-        'email' => 'required|email',
-        'password' => 'required|string',
-        // 'token_name' => 'required|string',
-    ]);
+Route::post('/tokens/create', UserTokenCreateController::class)
+    ->name('tokens.create');
 
-    if (! Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-        return response()->json([
-            'message' => 'Unauthenticated',
-            'errors' => [
-                'email' => ['The provided credentials are incorrect.'],
-            ],
-        ], 401);
-    }
-
-    $token = $request->user()->createToken('token');
-
-    return ['token' => $token->plainTextToken];
-});
-
-// Public routes (no authentication required)
+// Public route (no authentication required)
 Route::get('/surveys', SurveyIndexController::class)
     ->name('surveys.index');
 
