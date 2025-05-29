@@ -2,7 +2,10 @@
 
 namespace App\Providers;
 
+use Domain\Surveys\Events\SurveySummaryCreated;
+use Domain\Surveys\Listeners\NotifyUsersAboutTheNewSurveySummaries;
 use Domain\Surveys\Models\Survey;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Sanctum\PersonalAccessToken;
@@ -25,5 +28,10 @@ class AppServiceProvider extends ServiceProvider
     {
         Sanctum::usePersonalAccessTokenModel(PersonalAccessToken::class);
         Gate::policy(Survey::class, \Domain\Surveys\Policies\SurveyPolicy::class);
+
+        Event::listen(
+            SurveySummaryCreated::class,
+            NotifyUsersAboutTheNewSurveySummaries::class
+        );
     }
 }

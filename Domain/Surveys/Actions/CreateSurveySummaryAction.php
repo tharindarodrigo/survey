@@ -3,6 +3,7 @@
 namespace Domain\Surveys\Actions;
 
 use Domain\Surveys\Enums\Sentiment;
+use Domain\Surveys\Events\SurveySummaryCreated;
 use Domain\Surveys\Models\Survey;
 use Domain\Surveys\Models\SurveySummary;
 use OpenAI\Laravel\Facades\OpenAI;
@@ -52,7 +53,7 @@ class CreateSurveySummaryAction
         $sentiment = $this->normalizeSentiment($analysis['sentiment']);
 
         // Create or update the survey summary
-        return SurveySummary::updateOrCreate(
+        $summarySummary = SurveySummary::updateOrCreate(
             ['survey_id' => $survey->id],
             [
                 'summary_text' => $analysis['summary'],
@@ -60,6 +61,11 @@ class CreateSurveySummaryAction
                 'topics_json' => $analysis['topics'],
             ]
         );
+
+        // Fire the event after creating the summary
+        SurveySummaryCreated::dispatch($summarySummary);
+
+        return $summarySummary;
     }
 
     private function buildPrompt(Survey $survey, $responses): string
